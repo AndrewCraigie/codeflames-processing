@@ -7,7 +7,7 @@
 // 'scrolling' and array //System.arraycopy(ar, 0, result, 1, ar.length - 1);
 
 int [] cooling_array;
-PImage cooling_image;
+int cooling_array_length;
 
 PImage test_image;
 
@@ -16,12 +16,12 @@ boolean up;
 
 
 void setup () {
-  size(1600, 1200);
+  size(400, 300);
 
-  cooling_array =  generate_cooling_array(800, 1200);
-  cooling_image = image_from_array(cooling_array, 800, 1200);
+  cooling_array =  generate_cooling_array(400, 600);
+  cooling_array_length = cooling_array.length;
 
-  test_image = createImage(800, 600, RGB);
+  test_image = createImage(400, 300, RGB);
 
   up = true;
 }
@@ -79,60 +79,23 @@ PImage image_from_array(int[] arr, int w, int h) {
 void draw() {
   background(255);
 
-
-  if (rowIndex > 599) {
-    up = false;
-  }
-  if (rowIndex < 1) {
-    up = true;
-  }
-
-
-
   test_image.loadPixels();
 
+  for (int x = 0; x < 400; x++) {
+    for (int y = 0; y < 300; y++) {
+      
+      int index = x +  y  * 400;
 
+      int sourceIndex = x + (y + rowIndex)  * 400;
+      sourceIndex = sourceIndex % cooling_array_length;
 
-  if (up == true) {
-
-    for (int x = 0; x < 800; x++) {
-      for (int y = 0; y < 600; y++) {
-        int index = x +  y  * 800;
-
-        int sourceIndex;
-
-
-        sourceIndex = x + (y + rowIndex) * 800;
-
-
-        test_image.pixels[index] = color(cooling_array[sourceIndex]);
-      }
-    }
-  } else {
-    for (int x = 0; x < 800; x++) {
-      for (int y = 599; y > 0; y--) {
-        int index = x +  y  * 800;
-
-        int sourceIndex;
-
-
-        sourceIndex = x + (y + rowIndex) * 800;
-
-
-        test_image.pixels[index] = color(cooling_array[sourceIndex]);
-      }
+      test_image.pixels[index] = color(cooling_array[sourceIndex]);
     }
   }
 
   rowIndex++;
-  if (rowIndex > 599) {
-    rowIndex = 0;
-  }
-
-
 
   test_image.updatePixels();
-
-  image(cooling_image, 0, 0);
-  image(test_image, 800, 0);
+  image(test_image, 0, 0);
+ 
 }
